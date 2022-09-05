@@ -1,0 +1,32 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    text-align: center;
+    overflow: hidden;
+}
+
+.off {
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+table {
+    border-collapse: collapse;
+    text-align: center;
+}
+
+thead th {
+    min-width: 100px;
+}
+
+tbody tr {
+    border: none;
+    border-bottom: 1px solid black;
+}
+
+tbody tr td {
+    padding: 2px;
+
+}
