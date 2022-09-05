@@ -1,0 +1,1 @@
+https://pywebview.flowrl.com/guide/api.html#events-minimized
