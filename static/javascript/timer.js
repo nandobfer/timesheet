@@ -1,8 +1,9 @@
+let tempo = new Tempo()
 class Registro {
     constructor(start, description) {
         this.description = description;
         this.start = start;
-        this.date = getDate();
+        this.date = tempo.getDate();
 
         let row = `<tr>\
                         <td>${this.date}</td>\
@@ -23,33 +24,46 @@ const timer_button = $('#timer-button');
 const input_field = $('#input-field');
 let intervalId;
 
-let minutes;
-let hour;
+let minutes = 0;
+let hour = 0;
 let seconds;
 
 let registros = [];
+let start = 0;
+let paused = 0;
 
-const updateCount = () => {
-    hour = Math.floor(time/3600);
-    minutes = Math.floor(time2/60);
-    seconds = time % 60;
-    seconds = seconds < 10 ? '0' + seconds : seconds;
-    minutes = minutes < 10 ? '0' + minutes : minutes;
-    
-    time2 = minutes == 60? 0 : time2;
-   
-    clock.text(`${hour}:${minutes}:${seconds}`);
-    time++;
-    time2++;
+const countTime = () => {
+    intervalId = setInterval(() => {
+        const miliseconds = Date.now() - start - paused;
+        seconds = Math.floor(miliseconds / 1000);
+
+        
+        if (seconds == 60) {
+            start = Date.now();
+            minutes++;
+        }
+        
+        if (minutes == 60) {
+            minutes = 0;
+            hour++;
+        }
+
+        seconds = seconds < 10 ? '0' + seconds : seconds
+        minutes_text = minutes < 10 ? `0${minutes}` : minutes
+
+        clock.text(`${hour}:${minutes_text}:${seconds}`)
+
+    }, 100)
 }
 
 const pauseTimer = () => {
+    paused = Date.now()
     clearInterval(intervalId);
     timer_button.text('Resume');
     timer_button.off('click', pauseTimer);
     timer_button.on('click', startTimer);
 
-    let time = getTime();
+    let time = tempo.getTime();
     let registro = registros[registros.length - 1];
     registro.end = time;
 
@@ -63,14 +77,15 @@ const startTimer = () => {
         return null;
     } else {
         
-        intervalId = setInterval(updateCount, 1000);
+        start = Date.now() - start;
+        countTime()
         timer_button.text('Pause');
         timer_button.off('click', startTimer);
         timer_button.on('click', pauseTimer);
         input_field.addClass('off');
     
         let description = input_field.val();
-        let time = getTime();
+        let time = tempo.getTime();
         let registro = new Registro(time, description)
         registros.push(registro)
     }
