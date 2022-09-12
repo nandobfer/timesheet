@@ -110,8 +110,10 @@ const updateCount = () => {
     }
 
     if (flag_minutes) {
-        hour++;
-        flag_minutes = false;
+        if (minutes == 0) {
+            hour++;
+            flag_minutes = false;
+        }
     }
     
     clock.text(`${hour}:${minutes < 10 ? '0' + minutes : minutes}:${seconds < 10 ? '0' + seconds : seconds}`);
